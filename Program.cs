@@ -16,20 +16,33 @@ namespace EmoteParser
 
         static void Main(string[] args)
         {
-            string rootFolder;
+            string inputFolder;
+            string outputFolder;
+
             if (args.Length == 0)
             {
-                //Use the current directory for the root folder if no command line args are given.
-                rootFolder = ".";
+                //Use the current directory for both folders if no command line args are given.
+                inputFolder = outputFolder = ".";
+            }
+            else if(args.Length == 1)
+            {
+                //Use the given directory for both folders if only one arg is given.
+                inputFolder = outputFolder = args[0];
+            }
+            else if (args.Length == 2)
+            {
+                //Use the given input and output directories if 2 args are given.
+                inputFolder = args[0];
+                outputFolder = args[1];
             }
             else
             {
-                rootFolder = args[0];
+                throw new ArgumentException("Too many arguments!");
             }
 
-            string sourceFile = Path.Combine(rootFolder, "sources.txt");
-            string allEmotesFile = Path.Combine(rootFolder, "allEmotes.txt");
-            string conflictsFile = Path.Combine(rootFolder, "conflicts.txt");
+            string sourceFile = Path.Combine(inputFolder, "sources.txt");
+            string allEmotesFile = Path.Combine(outputFolder, "allEmotes.txt");
+            string conflictsFile = Path.Combine(outputFolder, "conflicts.txt");
 
             //Load emotes from all sources
             var sources = File.ReadAllText(sourceFile).Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);

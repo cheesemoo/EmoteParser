@@ -13,6 +13,7 @@ namespace EmoteParser
     public class EmoteSource
     {
         private static DateTime fetchNextSubAt = DateTime.Now;
+        private const uint FETCH_DELAY_IN_SECONDS = 2;
 
         public string Origin
         {
@@ -219,7 +220,7 @@ namespace EmoteParser
                 }
 
                 //Can't fetch the next stylesheet until 2 seconds from this request.
-                fetchNextSubAt = DateTime.Now.AddSeconds(2);
+                fetchNextSubAt = DateTime.Now.AddSeconds(FETCH_DELAY_IN_SECONDS);
 
                 Console.Write("Loading emotes from subreddit: {0}.", Origin);
                 LoadEmotesFromSubreddit(Origin);
