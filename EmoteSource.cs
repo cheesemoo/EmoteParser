@@ -108,7 +108,7 @@ namespace EmoteParser
 
         private static string StripIgnoreStuff(string noComments)
         {
-            string regexString = @"START-PONYSCRIPT-IGNORE[^{]*{[^}]*}.*END-PONYSCRIPT-IGNORE[^{]*{[^}]*}";
+            string regexString = @"START-PONYSCRIPT-IGNORE[^{]*{[^}]*}.*?END-PONYSCRIPT-IGNORE[^{]*{[^}]*}";
             return Regex.Replace(noComments, regexString, "", RegexOptions.IgnoreCase | RegexOptions.Singleline);
         }
 
