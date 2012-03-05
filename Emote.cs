@@ -5,7 +5,7 @@ using System.Text;
 
 namespace EmoteParser
 {
-    public class Emote
+    public class Emote : IComparable
     {
         public string Name
         {
@@ -66,6 +66,26 @@ namespace EmoteParser
         public override string ToString()
         {
             return string.Format("{0}: {1}", Source, Name);
+        }
+
+        public int CompareTo(object obj)
+        {
+            string compareWith = string.Empty;
+
+            //If the given object was an Emote, compare against its Name field.
+            Emote e = obj as Emote;
+            if (e != null)
+            {
+                compareWith = e.Name;
+            }
+            else if (obj != null)
+            {
+                //The given object wasn't an Emote. Just compare against its ToString.
+                compareWith = obj.ToString();
+            }
+
+            //Return the result of comparing this Emote's Name field with the other object.
+            return this.Name.CompareTo(compareWith);
         }
     }
 }

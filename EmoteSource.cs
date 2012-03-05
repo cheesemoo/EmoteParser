@@ -232,6 +232,9 @@ namespace EmoteParser
                 LoadEmotesFromFile(Origin);
                 Console.WriteLine(" Count: {0}", _emotes.Count);
             }
+
+            //After loading the emotes, sort them by name. This makes diffing much easier if the order in the CSS changed.
+            Emotes.Sort();
         }
 
         /// <summary>
