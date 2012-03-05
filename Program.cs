@@ -18,26 +18,38 @@ namespace EmoteParser
         {
             string inputFolder;
             string outputFolder;
+            string archiveFolder;
 
-            if (args.Length == 0)
+            switch(args.Length)
             {
-                //Use the current directory for both folders if no command line args are given.
-                inputFolder = outputFolder = ".";
-            }
-            else if(args.Length == 1)
-            {
-                //Use the given directory for both folders if only one arg is given.
-                inputFolder = outputFolder = args[0];
-            }
-            else if (args.Length == 2)
-            {
-                //Use the given input and output directories if 2 args are given.
-                inputFolder = args[0];
-                outputFolder = args[1];
-            }
-            else
-            {
-                throw new ArgumentException("Too many arguments!");
+                case 0:
+                    //Use the current directory for both folders if no command line args are given.
+                    inputFolder = outputFolder = ".";
+                    archiveFolder = null;
+                    break;
+
+                case 1:
+                   //Use the given directory for both folders if only one arg is given.
+                    inputFolder = outputFolder = args[0];
+                    archiveFolder = null;
+                    break;
+
+                case 2:
+                    //Use the given input and output directories if 2 args are given.
+                    inputFolder = args[0];
+                    outputFolder = args[1];
+                    archiveFolder = null;
+                    break;
+
+                case 3:
+                    //Use the given input, output, and archive directories if 3 args are given.
+                    inputFolder = args[0];
+                    outputFolder = args[1];
+                    archiveFolder = args[2];
+                    break;
+
+                default:
+                    throw new ArgumentException("Too many arguments!");
             }
 
             string sourceFile = Path.Combine(inputFolder, "sources.txt");
@@ -56,6 +68,18 @@ namespace EmoteParser
                 AddUniquesToList(source.Emotes);
             }
 
+            //If an archive folder was specified, write the current 'all emotes' and 'conflicts' files
+            // to the archive folder.
+            if (archiveFolder != null)
+            {
+                string filename = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss.fff") + ".txt";
+                string archiveOutFile = Path.Combine(archiveFolder, "Emotes", filename);
+                string archiveConflictFile = Path.Combine(archiveFolder, "Conflicts", filename);
+
+                WriteAll(archiveOutFile);
+                WriteConflicts(archiveConflictFile);
+            }
+
             //Write the 'all emotes' file
             WriteAll(allEmotesFile);
 
@@ -65,6 +89,8 @@ namespace EmoteParser
 
         private static void WriteConflicts(string conflictsFile)
         {
+            CreatePathIfNecessary(conflictsFile);
+
             //Build a list of lists of duplicates
             List<List<Emote>> duplicates = new List<List<Emote>>();
             foreach (Emote emote in _uniqueEmotes)
@@ -92,6 +118,8 @@ namespace EmoteParser
 
         private static void WriteAll(string allEmotesFile)
         {
+            CreatePathIfNecessary(allEmotesFile);
+
             using (var stream = File.CreateText(allEmotesFile))
             {
                 foreach (var emote in _emotes)
@@ -99,6 +127,12 @@ namespace EmoteParser
                     stream.WriteLine(emote.ToString());
                 }
             }
+        }
+
+        private static void CreatePathIfNecessary(string filePath)
+        {
+            string path = Path.GetDirectoryName(Path.GetFullPath(filePath));
+            Directory.CreateDirectory(path);
         }
 
         private static void AddUniquesToList(List<Emote> emotes)

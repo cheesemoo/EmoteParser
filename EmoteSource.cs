@@ -260,8 +260,35 @@ namespace EmoteParser
 
         private void LoadEmotesFromSubreddit(string subreddit)
         {
-            //First fetch the CSS for this subreddit, then pull the emotes from it
-            string cssString = DownloadCss(subreddit);
+            string cssString = null;
+            int numRetries = 3;
+            int retryWait = 5;
+
+            //Try to fetch the CSS for this subreddit. We'll stop trying when it succeeds, or give up when we run out of retries.
+            while (cssString == null)
+            {
+                try
+                {
+                    cssString = DownloadCss(subreddit);
+                }
+                catch (Exception e)
+                {
+                    //If there are any retries left, print a message and wait a bit before trying again.
+                    if (numRetries > 0)
+                    {
+                        Console.WriteLine("Exception while fetching CSS. Probably reddit's fault - waiting 5 seconds before retrying.");
+                        Thread.Sleep(TimeSpan.FromSeconds(retryWait));
+                        numRetries--;
+                    }
+                    else
+                    {
+                        //If there were no retries left, give up and rethrow the exception.
+                        throw;
+                    }
+                }
+            }
+
+            //If we were successful in getting the CSS, go ahead and add the emotes.
             AddEmotes(cssString);
         }
 
