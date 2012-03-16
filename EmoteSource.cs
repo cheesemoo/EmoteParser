@@ -92,7 +92,7 @@ namespace EmoteParser
 
             //Extract all href targets via regex. The \\? bits are in there because hardcoded CSS files (MRP, etc.)
             // may have the quotes escaped with a backslash.
-            string regexString = @"a\[href[\^|]?=\\?[""']/([A-Za-z0-9]+)\\?[""']\]";
+            string regexString = @"a\[href[\^|]?=\\?[""']/([^ ""']+)\\?[""']\]";
             Regex regex = new Regex(regexString);
             var matches = regex.Matches(css);
 
