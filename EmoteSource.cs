@@ -274,6 +274,18 @@ namespace EmoteParser
                 {
                     cssString = DownloadCss(subreddit);
                 }
+                catch (WebException e)
+                {
+                    var response = e.Response as HttpWebResponse;
+                    if (response != null && response.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        //If we got a 404, just give up - reddit says there's nothing there!
+                        return;
+                    }
+
+                    //Otherwise, rethrow to be caught below.
+                    throw;
+                }
                 catch (Exception e)
                 {
                     //If there are any retries left, print a message and wait a bit before trying again.

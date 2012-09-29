@@ -18,27 +18,24 @@ namespace EmoteParser
         {
             string inputFolder;
             string outputFolder;
-            string archiveFolder;
+            string archiveFolder = null;
 
             switch(args.Length)
             {
                 case 0:
                     //Use the current directory for both folders if no command line args are given.
                     inputFolder = outputFolder = ".";
-                    archiveFolder = null;
                     break;
 
                 case 1:
                    //Use the given directory for both folders if only one arg is given.
                     inputFolder = outputFolder = args[0];
-                    archiveFolder = null;
                     break;
 
                 case 2:
                     //Use the given input and output directories if 2 args are given.
                     inputFolder = args[0];
                     outputFolder = args[1];
-                    archiveFolder = null;
                     break;
 
                 case 3:
